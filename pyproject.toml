@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ml-eval-report"
+version = "0.1.0"
+description = "Lightweight, dependency-light evaluation reports for binary classifiers (metrics, ROC/PR, threshold sweep, calibration)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Sudhir Vissa" }]
+dependencies = ["numpy>=1.21"]
+
+[project.scripts]
+mleval = "mleval.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
