@@ -14,6 +14,8 @@ def evaluate(y_true, y_score, threshold=0.5):
         "f1": metrics.f1(y_true, y_pred),
         "accuracy": metrics.accuracy(y_true, y_pred),
         "roc_auc": metrics.roc_auc(y_true, y_score),
+        "brier_score": metrics.brier_score(y_true, y_score),
+        "ece": metrics.ece(y_true, y_score),
     }
 
 

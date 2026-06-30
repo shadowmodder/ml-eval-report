@@ -92,6 +92,45 @@ def threshold_sweep(y_true, y_score, thresholds=None):
     return rows
 
 
+def brier_score(y_true, y_prob):
+    """Mean squared error between predicted probabilities and binary outcomes."""
+    return float(np.mean((np.asarray(y_prob, dtype=float) - np.asarray(y_true, dtype=float)) ** 2))
+
+
+def ece(y_true, y_prob, n_bins=10):
+    """Expected Calibration Error: bin-size-weighted mean |confidence - accuracy|."""
+    y_true = np.asarray(y_true, dtype=float)
+    y_prob = np.asarray(y_prob, dtype=float)
+    total = len(y_true)
+    edges = np.linspace(0.0, 1.0, n_bins + 1)
+    err = 0.0
+    for i in range(n_bins):
+        lo, hi = edges[i], edges[i + 1]
+        mask = (y_prob >= lo) & (y_prob < hi) if i < n_bins - 1 else (y_prob >= lo) & (y_prob <= hi)
+        if not mask.any():
+            continue
+        conf = float(y_prob[mask].mean())
+        acc = float(y_true[mask].mean())
+        err += (int(mask.sum()) / total) * abs(conf - acc)
+    return float(err)
+
+
+def macro_f1(y_true, y_pred):
+    """Macro-averaged F1 across all integer classes present in y_true."""
+    y_true = np.asarray(y_true).astype(int)
+    y_pred = np.asarray(y_pred).astype(int)
+    classes = np.unique(y_true)
+    scores = []
+    for c in classes:
+        tp = int(np.sum((y_pred == c) & (y_true == c)))
+        fp = int(np.sum((y_pred == c) & (y_true != c)))
+        fn = int(np.sum((y_pred != c) & (y_true == c)))
+        p = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+        r = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        scores.append(2 * p * r / (p + r) if (p + r) > 0 else 0.0)
+    return float(np.mean(scores)) if scores else 0.0
+
+
 def calibration_bins(y_true, y_score, n_bins=10):
     y_true = np.asarray(y_true, dtype=float)
     y_score = np.asarray(y_score, dtype=float)
