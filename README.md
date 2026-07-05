@@ -1,3 +1,5 @@
+[![CI](https://github.com/shadowmodder/ml-eval-report/actions/workflows/ci.yml/badge.svg)](https://github.com/shadowmodder/ml-eval-report/actions/workflows/ci.yml)
+
 # ml-eval-report
 
 Lightweight, dependency-light evaluation for **binary classifiers**. NumPy in, plain-Python and markdown out — no heavyweight plotting or framework lock-in. Useful as a drop-in report step in any training or CI pipeline.
