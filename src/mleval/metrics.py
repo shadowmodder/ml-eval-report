@@ -2,6 +2,12 @@
 from __future__ import annotations
 import numpy as np
 
+# np.trapz was removed in NumPy 2.0; np.trapezoid is the replacement
+try:
+    _trapezoid = np.trapezoid
+except AttributeError:
+    _trapezoid = np.trapz  # type: ignore[attr-defined]
+
 
 def _counts(y_true, y_pred):
     y_true = np.asarray(y_true).astype(int)
@@ -71,7 +77,7 @@ def pr_curve(y_true, y_score):
 
 
 def auc(x, y):
-    return float(np.trapz(np.asarray(y, float), np.asarray(x, float)))
+    return float(_trapezoid(np.asarray(y, float), np.asarray(x, float)))
 
 
 def roc_auc(y_true, y_score):
